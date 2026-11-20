@@ -3,6 +3,7 @@
   "embedding_provider": "openai",
   "embedding_model" : "text-embedding-3-small",
   "cross_encoder_model_name": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "llm_rerank_model_name":"gpt-4o-mini",
   "vector_store": {
     "type": "faiss", 
     "local": {
