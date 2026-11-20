@@ -1,1 +1,1 @@
-# Enterprise_Knowledge_Assistant_with_Advanced-RAG
+# Enterprise_Knowledge_Assistant_with_Advanced-RAG_Agentic_AI
