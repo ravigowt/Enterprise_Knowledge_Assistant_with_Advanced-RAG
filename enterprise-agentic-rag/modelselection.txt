@@ -21,3 +21,10 @@ Gemini AI
        "storage_path": "vectorstores/faiss_index"
     }
   },
+
+cross_encoder_model
+ms-marco-MiniLM-L-6-v2
+ms-marco-MiniLM-L-12-v2
+bge-reranker-base
+bge-reranker-large
+mxbai-rerank-base-v1
