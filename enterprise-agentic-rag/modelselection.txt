@@ -1,0 +1,23 @@
+open AI
+"llm_provider": "openai"
+"embedding_provider": "openai",
+"embedding_model" : "text-embedding-3-small"
+
+Gemini AI
+"llm_provider": "gemini/google"
+"embedding_provider": "gemini/google",
+"embedding_model" : "models/gemini-embedding-001"
+
+ "vector_store": {
+    "type": "chroma", 
+    "local": {
+       "storage_path": "vectorstores/chroma_db"
+    }
+  },
+
+   "vector_store": {
+    "type": "faiss", 
+    "local": {
+       "storage_path": "vectorstores/faiss_index"
+    }
+  },

@@ -1,0 +1,19 @@
+{
+  "llm_provider": "openai",
+  "embedding_provider": "openai",
+  "embedding_model" : "text-embedding-3-small",
+  "vector_store": {
+    "type": "faiss", 
+    "local": {
+       "storage_path": "vectorstores/faiss_index"
+    }
+  },
+  "chunking": {
+    "chunk_size": 500,
+    "chunk_overlap": 100
+  },
+  "bm25": {
+    "k1": 1.5,
+    "b": 0.75
+  }
+}

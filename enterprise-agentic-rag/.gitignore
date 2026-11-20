@@ -1,0 +1,6 @@
+.env
+venv311
+__pycache__/
+*.py[cod]
+vectorstores/chroma_db/
+vectorstores/faiss_index/
