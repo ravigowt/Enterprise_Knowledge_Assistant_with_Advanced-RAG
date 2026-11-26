@@ -28,13 +28,13 @@ class LLMReranker:
         # --- ✅ Provider-specific model setup ---
         if provider == "openai":
             self.llm = ChatOpenAI(
-                model=self.config.get("llm_rerank_model_name", "gpt-4o-mini"),
+                model=self.config.get("llm_model_name", "gpt-4o-mini"),
                 temperature=temperature,
                 streaming=True  # future-proof for streaming
             )
         elif provider == "gemini":
             self.llm = ChatGoogleGenerativeAI(
-                model=self.config.get("llm_rerank_model_name", "gemini-2.5-flash"),
+                model=self.config.get("llm_model_name", "gemini-2.5-flash"),
                 temperature=temperature,
                 streaming=True  # same reason as above
             )
