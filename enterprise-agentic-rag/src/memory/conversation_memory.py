@@ -50,7 +50,6 @@ class ConversationMemory:
         return "\n".join(conversation)
 
     def clear(self):
-
         self.history = []
 
     def last_n_interactions(

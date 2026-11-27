@@ -1,6 +1,6 @@
 import tempfile
 from pathlib import Path
-
+import re
 import streamlit as st
 
 from src.document_loader import load_document
@@ -74,6 +74,16 @@ with st.sidebar:
         "Upload Documents",
         type=["pdf", "docx", "txt"],
         accept_multiple_files=True
+    )
+
+    st.header("Configuration")
+
+    llm_provider = st.radio(
+        "LLM Provider",
+        [
+            "OpenAI",
+            "Gemini"
+        ]
     )
 
     mode = st.radio(
@@ -210,9 +220,35 @@ Created {len(chunks)} chunks
 # --------------------------------------------------
 # Chat History
 # --------------------------------------------------
+def split_answer_and_sources(text):
+    """
+    Returns:
+    {
+        "answer": "<full answer without citations>",
+        "sources": ["file1", "file2"]
+    }
+    """
+    pattern = r'\[([^\]]+)\]'
+    citation_blocks = re.findall(pattern, text)
+    # Remove citation blocks from answer
+    answer = re.sub(r'\s*\[[^\]]+\]', '', text).strip()
+    sources = set()
+    for block in citation_blocks:
+        for source in block.split(","):
+            source = source.strip()
+            # remove page info if present
+            source = source.split(": page")[0]
+            try:
+                source = Path(source).name
+            except:
+                pass
+            sources.add(source)
+    return {
+        "answer": answer,
+        "sources": sorted(list(sources))
+    }
 
 for message in st.session_state.messages:
-
     with st.chat_message(
         message["role"]
     ):
@@ -227,45 +263,34 @@ for message in st.session_state.messages:
 query = st.chat_input(
     "Ask a question..."
 )
-
 if query:
-
     st.session_state.messages.append(
         {
             "role": "user",
             "content": query
         }
     )
-
     with st.chat_message("user"):
         st.markdown(query)
-
     with st.chat_message("assistant"):
-
         if (
             st.session_state.pipeline
             is None
         ):
-
             st.warning(
                 "Upload and process documents first."
             )
-
         else:
-
             with st.spinner(
                 "Generating response..."
             ):
-
                 if mode == "Standard RAG":
 
                     result = (
                         st.session_state.pipeline
                         .ask(query)
                     )
-
                 else:
-
                     result = (
                         st.session_state.agent
                         .ask(query)
@@ -275,39 +300,34 @@ if query:
                     "answer",
                     ""
                 )
-
-                st.markdown(answer)
-
-                # Sources
-
-                if result.get("sources"):
-
-                    st.subheader(
-                        "Sources"
-                    )
-
-                    for source in result[
-                        "sources"
-                    ]:
-
-                        st.write(
-                            f"📄 {source}"
-                        )
+                ans_source = split_answer_and_sources(answer)
+                st.markdown(ans_source["answer"])
+                if ans_source["sources"]:
+                    st.write("Sources:")
+                    for source in ans_source["sources"]:
+                        st.write(f"{source}")
 
                 # Confidence
-
                 if result.get(
                     "confidence"
                 ) is not None:
-
                     st.metric(
                         label="Confidence",
                         value=f"{round(result['confidence'] * 100, 2)} %"
                     )
-
                 st.session_state.messages.append(
                     {
                         "role": "assistant",
-                        "content": answer
+                        "content": (
+                                    ans_source["answer"]
+                                    + "\n\nSources:\n\n"
+                                    + "\n".join(source+" \n" for source in ans_source["sources"])
+)
                     }
                 )
+
+if st.button("🗑️ Clear Chat"):
+    st.session_state.messages = []
+    if "memory" in st.session_state:
+        st.session_state.memory.clear()
+    st.rerun()

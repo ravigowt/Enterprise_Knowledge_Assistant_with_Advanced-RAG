@@ -198,7 +198,6 @@ Answer:
 
         citation_engine = CitationEngine()
         citation_answer = citation_engine.generate_citations(answer,reranked_docs)
-
         
         
         # =========================
