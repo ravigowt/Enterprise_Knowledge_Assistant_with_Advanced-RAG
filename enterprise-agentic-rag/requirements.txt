@@ -1,5 +1,5 @@
 python-dotenv==1.0.1
-PyYAML==6.0.2
+PyYAML==6.0.3
 tqdm==4.66.4
 
 # LangChain Ecosystem
@@ -34,8 +34,8 @@ python-docx==1.2.0
 docx2txt==0.9
 
 # Data
-numpy==1.26.4
-pandas==2.2.2
+numpy
+pandas
 
 # HTTP
 requests
